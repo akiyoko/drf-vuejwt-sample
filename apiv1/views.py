@@ -9,7 +9,6 @@ from shop.models import Book
 from .serializers import BookSerializer
 
 
-# @method_decorator(transaction.atomic, name='create')
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
