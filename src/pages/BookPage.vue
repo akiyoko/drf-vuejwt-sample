@@ -2,7 +2,7 @@
   <div id="book-page">
     <Header :user="user"/>
 
-    <main class="container">
+    <div class="container">
       <div class="form-group row">
         <label class="col-sm-3 col-form-label">タイトル</label>
         <div class="col-sm-5">
@@ -20,18 +20,17 @@
           {{ isCreated ? '更新' : '登録' }}
         </b-button>
       </div>
+    </div>
 
-      <!-- For debug -->
-      <pre style="margin-top: 50px;">{{ $data }}</pre>
-    </main>
-
-    <LoginForm @logout="logout"/>
+    <!-- For debug -->
+    <div class="debug">
+      <pre>{{ $data }}</pre>
+    </div>
   </div>
 </template>
 
 <script>
   import Header from '@/components/Header.vue'
-  import LoginForm from '@/components/LoginForm.vue'
 
   const axios = require('axios');
 
@@ -58,13 +57,11 @@
   export default {
     name: 'BookPage',
     components: {
-      Header,
-      LoginForm
+      Header
     },
     props: {
       user: {
-        type: Object,
-        required: true
+        type: Object
       }
     },
     data: function () {
@@ -93,27 +90,29 @@
             'title': this.book.title,
             'price': this.book.price
           }
+        }).then(response => {
+          this.book = response.data;
+          this.response = response;
+        }).catch(error => {
+          this.response = error.response;
+          this.errors = Object.entries(error.response.data);
+          this.showAlert = true;
         })
-          .then(response => {
-            this.book = response.data;
-            this.response = response;
-          })
-          .catch(error => {
-            this.response = error.response;
-            this.errors = Object.entries(error.response.data);
-            this.showAlert = true;
-          })
       },
       logout: function () {
         console.log("BookPage....logout!!");
         this.$emit('logout');
-      },
+      }
     }
   }
 </script>
 
 <style scoped>
-  #book-page > main {
+  #book-page > div.container {
     margin-top: 4em;
+  }
+
+  div.debug {
+    margin: 5em 0 0 1em;
   }
 </style>
