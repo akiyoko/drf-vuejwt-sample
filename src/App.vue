@@ -1,53 +1,81 @@
 <template>
-  <div id="app">
-    <router-view :user="user"/>
+  <div id="app" v-cloak>
+    <router-view
+      :user="user"
+      @set-user="setUser"
+      @remove-user="removeUser"
+    />
 
     <!-- For debug -->
-    <pre style="margin-top: 50px;">{{ $data }}</pre>
+    <div class="container debug">
+      <p>App</p>
+      <pre>{{ $data }}</pre>
+    </div>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app',
-  data() {
-    return {
-      user: {
-        isAuthenticated: false,
-        username: ''
+  import userService from '@/services/userService'
+
+  export default {
+    data () {
+      return {
+        user: {
+          loggedIn: false,
+          username: ''
+        }
+      }
+    },
+    mounted () {
+      if (!this.user.loggedIn) {
+        // accessトークンで取得してみる
+        userService.getUser()
+          .then(user => {
+            this.setUser(user)
+            console.log('Succeeded to get user by access token!')
+            // this.$router.replace('/')
+          // }).catch(error => {
+          // this.$router.replace('/login')
+        })
+        // if (!this.user.loggedIn) {
+        //   this.$router.replace('/login')
+        // }
+      }
+    },
+    methods: {
+      setUser (user) {
+        console.log('App.vue ... setUser() is called.')
+        this.user.loggedIn = true
+        this.user.username = user.username
+      },
+      removeUser () {
+        console.log('App.vue ... removeUser() is called.')
+        this.user.loggedIn = false
+        this.user.username = ''
       }
     }
-  },
-  /*
-  mounted() {
-    if (!this.isAuthenticated) {
-      this.$router.replace({name: "login"});
-    }
-  },
-  */
-  methods: {
-    /*
-    setAuthenticated(status) {
-      console.log('setAuthenticated!!!')
-      this.user.isAuthenticated = status;
-    },
-    */
-    setUser(user) {
-      console.log('setUser!!!')
-      this.user = user;
-    },
-    logout() {
-      this.user.isAuthenticated = false;
-    }
   }
-}
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+  }
+
+  [v-cloak] {
+    display: none;
+  }
+
+  main.container {
+    border: 1px solid #cccccc;
+    margin-top: 4em;
+    padding: 2em;
+  }
+
+  .container.debug {
+    margin-top: 2em;
+  }
 </style>
