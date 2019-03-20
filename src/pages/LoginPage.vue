@@ -1,8 +1,9 @@
 <template>
   <div id="login-page">
-    <Header :user="user" :showLink="false" @logout="logout"/>
+    <Header :user="user" @logout="logout"/>
 
     <main class="container">
+      <p class="h5 mb-4">ログイン</p>
       <b-form @submit.prevent="login">
         <div class="row form-group">
           <label class="col-sm-3 col-form-label">ユーザー名</label>
@@ -16,7 +17,7 @@
             <b-form-input type="password" v-model="password" required/>
           </div>
         </div>
-        <div class="row text-center">
+        <div class="row text-center mt-5">
           <div class="col-sm-12">
             <b-button type="submit" variant="primary">ログイン</b-button>
           </div>
@@ -54,6 +55,23 @@
     },
     methods: {
       login: function () {
+        console.log('onSubmit() !!')
+        userService.login(this.username, this.password)
+          .then(user => {
+            this.$emit('set-user', user)
+            const next = this.$route.query.next || '/dashboard'
+            console.log('onSubmit() ... next=', next)
+            this.$router.replace(next)
+            console.log('Login success!!')
+          }).catch(error => {
+          console.log('Login error!!!!!!!')
+          this.errors = error.response
+        })
+        //this.$router.push('/?token=' + new Date().getTime())
+        //this.$router.push('/dashboard')
+      },
+      /*
+      login: function () {
         userService.login(this.username, this.password)
           .then(user => {
             this.$emit('set-user', user)
@@ -64,6 +82,7 @@
           this.errors = error.response
         })
       },
+      */
       logout: function () {
         userService.logout()
         this.$emit('remove-user')

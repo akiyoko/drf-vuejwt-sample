@@ -28,8 +28,9 @@ api.interceptors.response.use(function (response) {
   // 認証エラー
   if (error.response.status === 401) {
     console.log('Got 401 Error !!')
-    localStorage.removeItem('access')
-    location.reload(true)
+    //localStorage.removeItem('access')
+    //location.reload(true)
+    //document.location = '/login'
     // システムエラー
   //} else if (error.response.status === 500) {
   //  console.log('500 Error !!')
