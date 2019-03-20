@@ -1,10 +1,6 @@
 <template>
   <div id="app" v-cloak>
-    <router-view
-      :user="user"
-      @set-user="setUser"
-      @remove-user="removeUser"
-    />
+    <router-view/>
 
     <!-- For debug -->
     <div class="container debug">
@@ -18,15 +14,13 @@
   import userService from '@/services/userService'
 
   export default {
+    name: 'App',
     data () {
       return {
-        user: {
-          loggedIn: false,
-          username: ''
-        }
       }
     },
     mounted () {
+      /*
       if (!this.user.loggedIn) {
         // accessトークンで取得してみる
         userService.getUser()
@@ -41,18 +35,19 @@
         //   this.$router.replace('/login')
         // }
       }
+      */
     },
     methods: {
-      setUser (user) {
-        console.log('App.vue ... setUser() is called.')
-        this.user.loggedIn = true
-        this.user.username = user.username
-      },
-      removeUser () {
-        console.log('App.vue ... removeUser() is called.')
-        this.user.loggedIn = false
-        this.user.username = ''
-      }
+      // setUser (user) {
+      //   console.log('App.vue ... setUser() is called.')
+      //   this.user.loggedIn = true
+      //   this.user.username = user.username
+      // },
+      // removeUser () {
+      //   console.log('App.vue ... removeUser() is called.')
+      //   this.user.loggedIn = false
+      //   this.user.username = ''
+      // }
     }
   }
 </script>

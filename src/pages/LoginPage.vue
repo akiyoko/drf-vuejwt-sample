@@ -1,6 +1,6 @@
 <template>
   <div id="login-page">
-    <Header :user="user" @logout="logout"/>
+    <Header/>
 
     <main class="container">
       <p class="h5 mb-4">ログイン</p>
@@ -55,39 +55,15 @@
     },
     methods: {
       login: function () {
-        console.log('onSubmit() !!')
         userService.login(this.username, this.password)
           .then(user => {
-            this.$emit('set-user', user)
-            const next = this.$route.query.next || '/dashboard'
-            console.log('onSubmit() ... next=', next)
-            this.$router.replace(next)
+            const next = this.$route.query.next || '/'
+            // this.$router.replace(next)
             console.log('Login success!!')
           }).catch(error => {
           console.log('Login error!!!!!!!')
           this.errors = error.response
         })
-        //this.$router.push('/?token=' + new Date().getTime())
-        //this.$router.push('/dashboard')
-      },
-      /*
-      login: function () {
-        userService.login(this.username, this.password)
-          .then(user => {
-            this.$emit('set-user', user)
-            this.$router.replace('/')
-            console.log('Login success!!')
-          }).catch(error => {
-          console.log('Login error!!!!!!!')
-          this.errors = error.response
-        })
-      },
-      */
-      logout: function () {
-        userService.logout()
-        this.$emit('remove-user')
-        console.log('HomePage.vue ... logout() ... Success!!')
-        this.$router.replace('/login')
       }
     }
   }

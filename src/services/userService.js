@@ -1,36 +1,37 @@
 import api from '@/services/api'
+import store from '@/store'
+import router from '@/router'
 
 // ログイン
-function login(username, password) {
-  console.log('services/userService.js ... login() is called. username=', username);
+function login (username, password) {
+  console.log('services/userService.js ... login() is called. username=', username)
   return api.post('/auth/jwt/create/', {
     'username': username,
     'password': password
   }).then(response => {
-    console.log('/auth/jwt/create/ success!!');
+    console.log('/auth/jwt/create/ success!!')
     // localStorageにJWTトークンを保存
-    localStorage.setItem('access', response.data.access);
+    localStorage.setItem('access', response.data.access)
     // Get user
-    return getUser().then(user => user)
-  }).catch(error => {
-    localStorage.removeItem('access');
-    return Promise.reject(error)
+    return getUser().then(user => {
+      store.dispatch('setUser', { user: user })
+    })
   })
 }
 
 // ユーザー情報を取得
-function getUser() {
+function getUser () {
   return api.get('/auth/users/me/')
     .then(response => {
-      console.log('/auth/users/me/ success!!');
+      console.log('/auth/users/me/ success!!')
       return response.data
     })
 }
 
-function logout() {
-  // remove user from local storage to log user out
-  localStorage.removeItem('access');
-  //location.reload(true);
+function logout () {
+  store.dispatch('removeUser')
+  localStorage.removeItem('access')
+  router.replace('/login')
 }
 
 /*
@@ -56,4 +57,4 @@ export default {
   login,
   getUser,
   logout
-};
+}

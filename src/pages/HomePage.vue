@@ -1,6 +1,6 @@
 <template>
   <div id="home-page">
-    <Header :user="user" @logout="logout"/>
+    <Header/>
 
     <main class="container">
       <p class="h5 mb-4">ホーム</p>
@@ -36,7 +36,6 @@
 <script>
   import Header from '@/components/Header.vue'
   import api from '@/services/api'
-  import userService from '@/services/userService'
 
   export default {
     components: {
@@ -82,12 +81,6 @@
           this.errors = Object.entries(error.response.data)
           this.showAlert = true
         })
-      },
-      logout: function () {
-        userService.logout()
-        this.$emit('remove-user')
-        console.log('HomePage.vue ... logout() ... Success!!')
-        this.$router.replace('/login')
       }
     }
   }
