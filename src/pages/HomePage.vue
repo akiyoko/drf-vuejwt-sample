@@ -26,32 +26,25 @@
     </main>
 
     <!-- For debug -->
-    <div class="container debug">
-      <p>HomePage</p>
-      <pre>{{ $data }}</pre>
-    </div>
+    <debug :data="$data">HomePage</debug>
   </div>
 </template>
 
 <script>
   import Header from '@/components/Header.vue'
+  import Debug from '@/components/Debug.vue'
   import api from '@/services/api'
 
   export default {
     components: {
-      Header
-    },
-    props: {
-      user: {
-        type: Object
-      }
+      Header,
+      Debug
     },
     data: function () {
       return {
         book: {
           price: 0
         },
-        //response: null,
         showAlert: false,
         errors: []
       }
@@ -75,9 +68,8 @@
           }
         }).then(response => {
           this.book = response.data
-          //this.response = response;
+          this.errors = []
         }).catch(error => {
-          //this.response = error.response;
           this.errors = Object.entries(error.response.data)
           this.showAlert = true
         })

@@ -1,56 +1,8 @@
 <template>
   <div id="app" v-cloak>
     <router-view/>
-
-    <!-- For debug -->
-    <div class="container debug">
-      <p>App</p>
-      <pre>{{ $data }}</pre>
-    </div>
   </div>
 </template>
-
-<script>
-  import userService from '@/services/userService'
-
-  export default {
-    name: 'App',
-    data () {
-      return {
-      }
-    },
-    mounted () {
-      /*
-      if (!this.user.loggedIn) {
-        // accessトークンで取得してみる
-        userService.getUser()
-          .then(user => {
-            this.setUser(user)
-            console.log('Succeeded to get user by access token!')
-            // this.$router.replace('/')
-          // }).catch(error => {
-          // this.$router.replace('/login')
-        })
-        // if (!this.user.loggedIn) {
-        //   this.$router.replace('/login')
-        // }
-      }
-      */
-    },
-    methods: {
-      // setUser (user) {
-      //   console.log('App.vue ... setUser() is called.')
-      //   this.user.loggedIn = true
-      //   this.user.username = user.username
-      // },
-      // removeUser () {
-      //   console.log('App.vue ... removeUser() is called.')
-      //   this.user.loggedIn = false
-      //   this.user.username = ''
-      // }
-    }
-  }
-</script>
 
 <style>
   #app {
@@ -69,9 +21,5 @@
     margin-top: 4em;
     padding: 2em;
     width: 600px;
-  }
-
-  .container.debug {
-    margin-top: 2em;
   }
 </style>

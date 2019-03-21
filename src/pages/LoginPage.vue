@@ -2,6 +2,12 @@
   <div id="login-page">
     <Header/>
 
+    <b-alert variant="danger" show v-show="errors.length > 0">
+      <ul>
+        <li v-for="(v, k) in errors">{{ v }}: {{ k }}</li>
+      </ul>
+    </b-alert>
+
     <main class="container">
       <p class="h5 mb-4">ログイン</p>
       <b-form @submit.prevent="login">
@@ -26,25 +32,19 @@
     </main>
 
     <!-- For debug -->
-    <div class="container debug">
-      <p>LoginPage</p>
-      <pre>{{ $data }}</pre>
-    </div>
+    <debug :data="$data">LoginPage</debug>
   </div>
 </template>
 
 <script>
   import Header from '@/components/Header.vue'
+  import Debug from '@/components/Debug.vue'
   import userService from '@/services/userService'
 
   export default {
     components: {
-      Header
-    },
-    props: {
-      user: {
-        type: Object
-      }
+      Header,
+      Debug
     },
     data () {
       return {
@@ -58,11 +58,12 @@
         userService.login(this.username, this.password)
           .then(user => {
             const next = this.$route.query.next || '/'
-            // this.$router.replace(next)
+            this.$router.replace(next)
+            console.log('LoginPage ... login() ... user=', user)
             console.log('Login success!!')
           }).catch(error => {
           console.log('Login error!!!!!!!')
-          this.errors = error.response
+          this.errors = Object.entries(error.response.data)
         })
       }
     }

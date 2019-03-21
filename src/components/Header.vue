@@ -21,7 +21,6 @@
     methods: {
       logout: function () {
         userService.logout()
-        console.log('HomePage.vue ... logout() ... Success!!')
       }
     }
   }
