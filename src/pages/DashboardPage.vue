@@ -5,14 +5,18 @@
     </main>
 
     <!-- For debug -->
-    <div class="container debug">
-      <p>HomePage</p>
-      <pre>{{ $data }}</pre>
-    </div>
+    <debug :data="$data">DashboardPage</debug>
   </div>
 </template>
 
 <script>
+  import Debug from '@/components/Debug.vue'
+
+  export default {
+    components: {
+      Debug
+    }
+  }
 </script>
 
 <style scoped>

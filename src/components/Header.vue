@@ -5,8 +5,8 @@
         <img src="@/assets/images/logo.png" width="120">
       </a>
       <b-navbar-nav class="ml-auto" v-if="$route.meta.requiresAuth">
-        <b-nav-item-dropdown right v-if="$store.getters.loggedIn">
-          <template slot="button-content">{{ $store.getters.username }}</template>
+        <b-nav-item-dropdown right v-if="$store.state.user.loggedIn">
+          <template slot="button-content">{{ $store.state.user.username }}</template>
           <b-dropdown-item href="#" @click="logout">ログアウト</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
@@ -21,6 +21,7 @@
     methods: {
       logout: function () {
         userService.logout()
+        this.$store.commit('message/setMessage', { info: 'ログアウトしました。' })
         this.$router.replace('/login')
       }
     }

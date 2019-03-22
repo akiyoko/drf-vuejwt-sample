@@ -1,5 +1,5 @@
 import axios from 'axios'
-import router from '@/router'
+import store from '@/store'
 
 const api = axios.create({
   baseURL: 'http://127.0.0.1:8000/api/v1/',
@@ -23,22 +23,36 @@ api.interceptors.request.use(function (config) {
 })
 
 // 共通エラー処理
-/*
 api.interceptors.response.use(function (response) {
+  return response
 }, function (error) {
-  // 認証エラー
-  if (error.response.status === 401) {
-    console.log('Got 401 Error !!')
-    router.replace('/login')
-    //localStorage.removeItem('access')
-    //location.reload(true)
-    //document.location = '/login'
-    // システムエラー
-  //} else if (error.response.status === 500) {
-  //  console.log('500 Error !!')
+  const status = error.response ? error.response.status : 500
+  console.log('status=', status)
+  console.log('error=', error)
+
+  if (status === 400) {
+    // バリデーションNG
+    // this.messages.warnings = Object.entries(error.response.data)
+    const warnings = Object.entries(error.response.data)
+    store.commit('message/setMessage', { warnings: warnings })
+
+  } else if (status === 401) {
+    // 認証エラー
+    const message = '認証エラーです。'
+    store.commit('message/setMessage', { error: message })
+
+  } else if (status === 403) {
+    // 権限エラー
+    const message = '権限エラーです。'
+    store.commit('message/setMessage', { error: message })
+
+  } else {
+    // その他のエラー
+    // this.messages.error = error.statusText
+    const message = error.statusText ? error.statusText : '想定外のエラーです。'
+    store.commit('message/setMessage', { error: message })
   }
   return Promise.reject(error)
 })
-*/
 
 export default api

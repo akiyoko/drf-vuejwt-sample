@@ -14,11 +14,15 @@ function login (username, password) {
     'password': password
   })
     .then(response => {
+      console.log('888', response)
       // localStorageにJWTトークンを保存
       localStorage.setItem('access', response.data.access)
       // ユーザー情報を取得してクライアント側の内部状態を更新
       return getUser()
         .then(user => user)
+    })
+    .catch(error => {
+      console.log('999', error)
     })
 }
 
@@ -29,7 +33,7 @@ function logout () {
   // localStorageからJWTトークンを削除
   localStorage.removeItem('access')
   // クライアント側の内部状態を更新
-  store.dispatch('removeUser')
+  store.commit('user/removeUser')
 }
 
 /**
@@ -37,11 +41,14 @@ function logout () {
  * @returns {Promise}
  */
 function getUser () {
+  console.log('11111')
   return api.get('/auth/users/me/')
     .then(response => {
+      console.log('22222')
       const user = response.data
+      console.log('3333')
       // クライアント側の内部状態を更新
-      store.dispatch('setUser', { user: user })
+      store.commit('user/setUser', { user: user })
       return user
     })
 }

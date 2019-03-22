@@ -1,8 +1,7 @@
 <template>
   <div id="home-page">
     <Header/>
-
-    <Messages :messages="messages"/>
+    <Messages/>
 
     <main class="container">
       <p class="h5 mb-4">ホーム</p>
@@ -48,11 +47,6 @@
       return {
         book: {
           price: 0
-        },
-        messages: {
-          info: '',
-          warnings: [],
-          error: ''
         }
       }
     },
@@ -63,7 +57,7 @@
     },
     methods: {
       saveBook: function () {
-        this.errors = []
+        this.$store.commit('message/clearMessage')
         api({
           method: this.isCreated ? 'put' : 'post',
           url: this.isCreated ? '/books/' + this.book.id + '/' : '/books/',
@@ -74,7 +68,8 @@
           }
         })
           .then(response => {
-            this.messages.info = this.isCreated ? '更新しました。' : '登録しました。'
+            const message = this.isCreated ? "更新しました。" : "登録しました。"
+            this.$store.commit('message/setMessage', { info: message })
             this.book = response.data
           })
           .catch(error => {

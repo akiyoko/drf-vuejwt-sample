@@ -3,35 +3,71 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
+const userModule = {
+  strict: process.env.NODE_ENV !== 'production',
+  namespaced: true,
   state: {
-    user: {
-      username: '',
-      loggedIn: false
-    }
-  },
-  getters: {
-    username: state => state.user.username,
-    loggedIn: state => state.user.loggedIn
+    username: '',
+    loggedIn: false
   },
   mutations: {
-    updateUser (state, payload) {
-      if (payload && payload.user) {
-        state.user.username = payload.user.username
-        state.user.loggedIn = true
-      } else {
-        state.user.username = ''
-        state.user.loggedIn = false
-      }
+    setUser (state, payload) {
+      state.username = payload.user.username
+      state.loggedIn = true
+    },
+    removeUser (state) {
+      state.username = ''
+      state.loggedIn = false
     }
   },
   actions: {
     setUser ({ commit }, payload) {
-      commit('updateUser', {user: payload.user})
+      commit('setUser', payload)
     },
     removeUser ({ commit }) {
-      commit('updateUser')
+      commit('removeUser')
     }
+  }
+}
+
+const messageModule = {
+  strict: process.env.NODE_ENV !== 'production',
+  namespaced: true,
+  state: {
+    error: '',
+    warnings: [],
+    info: '',
+    showSeconds: 10
+  },
+  mutations: {
+    setMessage (state, payload) {
+      state.showSeconds = 10
+      if (payload.error) {
+        state.error = payload.error
+        state.warnings = []
+        state.info = ''
+      } else if (payload.warnings) {
+        state.error = ''
+        state.warnings = payload.warnings
+        state.info = ''
+      } else if (payload.info) {
+        state.error = ''
+        state.warnings = []
+        state.info = payload.info
+      }
+    },
+    clearMessage (state) {
+      state.error = ''
+      state.warnings = []
+      state.info = ''
+    }
+  }
+}
+
+const store = new Vuex.Store({
+  modules: {
+    user: userModule,
+    message: messageModule
   }
 })
 

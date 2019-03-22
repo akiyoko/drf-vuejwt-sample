@@ -9,7 +9,7 @@
 
     <div class="container debug">
       <p>Store</p>
-      <pre>{{ $store.getters }}</pre>
+      <pre>{{ $store.state }}</pre>
     </div>
   </div>
 </template>

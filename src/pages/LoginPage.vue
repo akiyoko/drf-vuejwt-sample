@@ -1,7 +1,7 @@
 <template>
   <div id="login-page">
     <Header/>
-    <Messages :messages="messages"/>
+    <Messages/>
 
     <main class="container">
       <p class="h5 mb-4">ログイン</p>
@@ -47,39 +47,34 @@
       return {
         username: '',
         password: '',
-        error: null,
-        messages: {
-          info: '',
-          warnings: [],
-          error: ''
-        }
+        error: null
       }
     },
     methods: {
       login: function () {
-        this.clearMessages()
+        this.$store.commit('message/clearMessage')
+        console.log('444')
         userService.login(this.username, this.password)
           .then(user => {
-            this.messages.info = 'ログインしました。'
+            console.log('555')
+            this.$store.commit('message/setMessage', { info: 'ログインしました。' })
             const next = this.$route.query.next || '/'
             this.$router.replace(next)
             console.log('LoginPage ... login() ... user=', user)
             console.log('Login success!!')
           })
-          .catch(error => {
-            console.log('LoginPage error!!!!!!! error=', error)
-            const status = error.response ? error.response.status : null
-            if (status === 400) {
-              this.messages.warnings = Object.entries(error.response.data)
-            } else {
-              this.messages.error = error.statusText
-            }
-          })
-      },
-      clearMessages: function () {
-        this.messages.info = ''
-        this.messages.warnings = []
-        this.messages.error = ''
+        // .catch(error => {
+        //   console.log('LoginPage error!!!!!!! error=', error)
+        //   const status = error.response ? error.response.status : null
+        //   if (status === 400) {
+        //     // this.messages.warnings = Object.entries(error.response.data)
+        //     const warnings = Object.entries(error.response.data)
+        //     this.$store.commit('message/setMessage', { warnings: warnings })
+        //   } else {
+        //     // this.messages.error = error.statusText
+        //     this.$store.commit('message/setMessage', { error: error.statusText })
+        //   }
+        // })
       }
     }
   }
