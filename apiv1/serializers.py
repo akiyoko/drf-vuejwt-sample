@@ -21,8 +21,8 @@ class BookSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        if data['start'] > data['finish']:
-            raise serializers.ValidationError("finish must occur after start")
+        if data['price'] > 2000:
+            raise serializers.ValidationError("2000円以上するのはダメよん")
         return data
 
 

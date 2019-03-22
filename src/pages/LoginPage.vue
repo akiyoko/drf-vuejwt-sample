@@ -47,6 +47,7 @@
       return {
         username: '',
         password: '',
+        error: null,
         messages: {
           info: '',
           warnings: [],
@@ -67,7 +68,8 @@
           })
           .catch(error => {
             console.log('LoginPage error!!!!!!! error=', error)
-            if (error.response.status === 400) {
+            const status = error.response ? error.response.status : null
+            if (status === 400) {
               this.messages.warnings = Object.entries(error.response.data)
             } else {
               this.messages.error = error.statusText

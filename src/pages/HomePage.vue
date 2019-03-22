@@ -79,7 +79,8 @@
           })
           .catch(error => {
             console.log('HopePage error!!!!!!! error=', error)
-            if (error.response.status === 400) {
+            const status = error.response.status
+            if (status === 400) {
               this.messages.warnings = Object.entries(error.response.data)
             } else {
               this.messages.error = error.statusText
