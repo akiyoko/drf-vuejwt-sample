@@ -9,13 +9,13 @@
         <div class="row form-group">
           <label class="col-sm-3 col-form-label">タイトル</label>
           <div class="col-sm-8">
-            <input type="text" class="form-control" v-model="book.title">
+            <input type="text" class="form-control" v-model="form.book.title">
           </div>
         </div>
         <div class="row form-group">
           <label class="col-sm-3 col-form-label">価格</label>
           <div class="col-sm-8">
-            <input type="text" class="form-control" v-model="book.price">
+            <input type="text" class="form-control" v-model="form.book.price">
           </div>
         </div>
         <div class="row text-center mt-5">
@@ -45,14 +45,17 @@
     },
     data: function () {
       return {
-        book: {
-          price: 0
+        form: {
+          book: {
+            title: '',
+            price: 0
+          }
         }
       }
     },
     computed: {
       isCreated: function () {
-        return this.book.id !== undefined
+        return this.form.book.id !== undefined
       }
     },
     methods: {
@@ -60,26 +63,17 @@
         this.$store.commit('message/clearMessage')
         api({
           method: this.isCreated ? 'put' : 'post',
-          url: this.isCreated ? '/books/' + this.book.id + '/' : '/books/',
+          url: this.isCreated ? '/books/' + this.form.book.id + '/' : '/books/',
           data: {
-            'id': this.book.id,
-            'title': this.book.title,
-            'price': this.book.price
+            'id': this.form.book.id,
+            'title': this.form.book.title,
+            'price': this.form.book.price
           }
         })
           .then(response => {
-            const message = this.isCreated ? "更新しました。" : "登録しました。"
+            const message = this.isCreated ? '更新しました。' : '登録しました。'
             this.$store.commit('message/setMessage', { info: message })
-            this.book = response.data
-          })
-          .catch(error => {
-            console.log('HopePage error!!!!!!! error=', error)
-            const status = error.response.status
-            if (status === 400) {
-              this.messages.warnings = Object.entries(error.response.data)
-            } else {
-              this.messages.error = error.statusText
-            }
+            this.form.book = response.data
           })
       }
     }

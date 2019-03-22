@@ -10,6 +10,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
+  // ログインが必要な画面には「requiresAuth」フラグを付けておく
   routes: [
     { path: '/', component: HomePage, meta: { requiresAuth: true } },
     { path: '/dashboard', component: DashboardPage, meta: { requiresAuth: true } },
@@ -18,6 +19,7 @@ const router = new VueRouter({
   ]
 })
 
+// routerで画面遷移する直前に実行される
 router.beforeEach((to, from, next) => {
   console.log('to.path=', to.path)
   console.log('store=', store)
@@ -36,7 +38,6 @@ router.beforeEach((to, from, next) => {
   if (requiresAuth && !loggedIn) {
     const token = localStorage.getItem('access')
     if (token != null) {
-      console.log('router... token is not null')
       userService.getUser()
         .then(() => {
           next()
@@ -51,11 +52,11 @@ router.beforeEach((to, from, next) => {
 
   // ログイン状態でログイン画面に遷移しようとした場合、強制ログアウト
   // router内では正確な状態が取得できない？
-  //if (to.path === '/login' && loggedIn) {
   // if (to.path === '/login') {
-  //   console.log('Force logout.')
-  //   userService.logout()
-  // }
+  if (to.path === '/login' && loggedIn) {
+    console.log('Force logout.')
+    userService.logout()
+  }
 
   console.log('Next.')
   next()

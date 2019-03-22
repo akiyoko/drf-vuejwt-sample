@@ -21,9 +21,6 @@ function login (username, password) {
       return getUser()
         .then(user => user)
     })
-    .catch(error => {
-      console.log('999', error)
-    })
 }
 
 /**

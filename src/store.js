@@ -19,14 +19,14 @@ const userModule = {
       state.username = ''
       state.loggedIn = false
     }
-  },
-  actions: {
-    setUser ({ commit }, payload) {
-      commit('setUser', payload)
-    },
-    removeUser ({ commit }) {
-      commit('removeUser')
-    }
+    // },
+    // actions: {
+    //   setUser ({ commit }, payload) {
+    //     commit('setUser', payload)
+    //   },
+    //   removeUser ({ commit }) {
+    //     commit('removeUser')
+    //   }
   }
 }
 

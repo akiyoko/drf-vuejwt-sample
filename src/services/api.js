@@ -32,7 +32,6 @@ api.interceptors.response.use(function (response) {
 
   if (status === 400) {
     // バリデーションNG
-    // this.messages.warnings = Object.entries(error.response.data)
     const warnings = Object.entries(error.response.data)
     store.commit('message/setMessage', { warnings: warnings })
 
