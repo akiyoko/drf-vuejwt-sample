@@ -1,12 +1,7 @@
 <template>
   <div id="login-page">
     <Header/>
-
-    <b-alert variant="danger" show v-show="errors.length > 0">
-      <ul>
-        <li v-for="(v, k) in errors">{{ v }}: {{ k }}</li>
-      </ul>
-    </b-alert>
+    <Messages :messages="messages"/>
 
     <main class="container">
       <p class="h5 mb-4">ログイン</p>
@@ -37,34 +32,52 @@
 </template>
 
 <script>
-  import Header from '@/components/Header.vue'
-  import Debug from '@/components/Debug.vue'
   import userService from '@/services/userService'
+  import Header from '@/components/Header.vue'
+  import Messages from '@/components/Messages.vue'
+  import Debug from '@/components/Debug.vue'
 
   export default {
     components: {
       Header,
+      Messages,
       Debug
     },
     data () {
       return {
         username: '',
         password: '',
-        errors: []
+        messages: {
+          info: '',
+          warnings: [],
+          error: ''
+        }
       }
     },
     methods: {
       login: function () {
+        this.clearMessages()
         userService.login(this.username, this.password)
           .then(user => {
+            this.messages.info = 'ログインしました。'
             const next = this.$route.query.next || '/'
             this.$router.replace(next)
             console.log('LoginPage ... login() ... user=', user)
             console.log('Login success!!')
-          }).catch(error => {
-          console.log('Login error!!!!!!!')
-          this.errors = Object.entries(error.response.data)
-        })
+          })
+          .catch(error => {
+            console.log('LoginPage error!!!!!!! error=', error)
+            if (error.response.status === 400) {
+              this.messages.warnings = Object.entries(error.response.data)
+            } else {
+              this.messages.error = error.statusText
+            }
+          })
+      },
+      clearMessages: function () {
+        this.messages.info = ''
+        this.messages.warnings = []
+        this.messages.error = ''
       }
     }
   }

@@ -27,7 +27,7 @@ const store = new Vuex.Store({
   },
   actions: {
     setUser ({ commit }, payload) {
-      commit('updateUser', payload)
+      commit('updateUser', {user: payload.user})
     },
     removeUser ({ commit }) {
       commit('updateUser')

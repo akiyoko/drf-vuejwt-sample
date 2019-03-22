@@ -2,6 +2,8 @@
   <div id="home-page">
     <Header/>
 
+    <Messages :messages="messages"/>
+
     <main class="container">
       <p class="h5 mb-4">ホーム</p>
       <b-form @submit.prevent="saveBook">
@@ -31,13 +33,15 @@
 </template>
 
 <script>
-  import Header from '@/components/Header.vue'
-  import Debug from '@/components/Debug.vue'
   import api from '@/services/api'
+  import Header from '@/components/Header.vue'
+  import Messages from '@/components/Messages.vue'
+  import Debug from '@/components/Debug.vue'
 
   export default {
     components: {
       Header,
+      Messages,
       Debug
     },
     data: function () {
@@ -45,8 +49,11 @@
         book: {
           price: 0
         },
-        showAlert: false,
-        errors: []
+        messages: {
+          info: '',
+          warnings: [],
+          error: ''
+        }
       }
     },
     computed: {
@@ -56,7 +63,6 @@
     },
     methods: {
       saveBook: function () {
-        this.showAlert = false
         this.errors = []
         api({
           method: this.isCreated ? 'put' : 'post',
@@ -66,13 +72,19 @@
             'title': this.book.title,
             'price': this.book.price
           }
-        }).then(response => {
-          this.book = response.data
-          this.errors = []
-        }).catch(error => {
-          this.errors = Object.entries(error.response.data)
-          this.showAlert = true
         })
+          .then(response => {
+            this.messages.info = this.isCreated ? '更新しました。' : '登録しました。'
+            this.book = response.data
+          })
+          .catch(error => {
+            console.log('HopePage error!!!!!!! error=', error)
+            if (error.response.status === 400) {
+              this.messages.warnings = Object.entries(error.response.data)
+            } else {
+              this.messages.error = error.statusText
+            }
+          })
       }
     }
   }

@@ -4,8 +4,8 @@
       <a class="navbar-brand" href="/">
         <img src="@/assets/images/logo.png" width="120">
       </a>
-      <b-navbar-nav class="ml-auto">
-        <b-nav-item-dropdown right v-if="$route.meta.requiresAuth && $store.getters.loggedIn">
+      <b-navbar-nav class="ml-auto" v-if="$route.meta.requiresAuth">
+        <b-nav-item-dropdown right v-if="$store.getters.loggedIn">
           <template slot="button-content">{{ $store.getters.username }}</template>
           <b-dropdown-item href="#" @click="logout">ログアウト</b-dropdown-item>
         </b-nav-item-dropdown>
@@ -21,6 +21,7 @@
     methods: {
       logout: function () {
         userService.logout()
+        this.$router.replace('/login')
       }
     }
   }

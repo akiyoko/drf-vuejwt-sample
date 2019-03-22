@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',  # 追加
     'corsheaders',     # TODO
     'djoser',          # 追加
+    'django_extensions',
 
     # My applications
     'apiv1.apps.Apiv1Config',

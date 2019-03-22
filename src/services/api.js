@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '@/router'
 
 const api = axios.create({
   baseURL: 'http://127.0.0.1:8000/api/v1/',
@@ -28,6 +29,7 @@ api.interceptors.response.use(function (response) {
   // 認証エラー
   if (error.response.status === 401) {
     console.log('Got 401 Error !!')
+    router.replace('/login')
     //localStorage.removeItem('access')
     //location.reload(true)
     //document.location = '/login'

@@ -17,35 +17,34 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log('to.path=', to.path)
   const requiresAuth = to.meta.requiresAuth
   const loggedIn = store.getters.loggedIn
-  console.log('router... to.path=', to.path)
-  console.log('router... requiresAuth=', requiresAuth)
-  console.log('router... loggedIn=', loggedIn)
-  if (requiresAuth) {
-    if (loggedIn) {
-      console.log('Force user to after login page.')
-      //next('/')
-    } else {
-      const token = localStorage.getItem('access')
-      if (token != null) {
-        console.log('router... token is not null')
-        userService.getUser().then(user => {
-          console.log('router... getUser success!!')
-          store.dispatch('setUser', { user: user })
-          // TODO: ログイン状態で / に遷移するとログイン画面が表示される！？
+
+  // 未ログイン状態でログインが必要な画面に遷移しようとした場合、ログイン画面へ
+  if (requiresAuth && !loggedIn) {
+    const token = localStorage.getItem('access')
+    if (token != null) {
+      console.log('router... token is not null')
+      userService.getUser()
+        .then(() => {
           next()
         })
-      }
-      console.log('Force user to login page.')
-      next({
-        path: '/login',
-        query: { next: to.fullPath }
-      })
     }
+    console.log('Force to login page.')
+    next({
+      path: '/login',
+      query: { next: to.fullPath }
+    })
   }
 
-  console.log('Go to next.')
+  // ログイン状態でログイン画面に遷移しようとした場合、強制ログアウト
+  if (to.path === '/login' && loggedIn) {
+    console.log('Force logout.')
+    userService.logout()
+  }
+
+  console.log('Next.')
   next()
 })
 
