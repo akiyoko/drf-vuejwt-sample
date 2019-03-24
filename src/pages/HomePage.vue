@@ -3,6 +3,7 @@
     <Header/>
     <Messages/>
 
+    <!-- メイン -->
     <main class="container">
       <p class="h5 mb-4">ホーム</p>
       <b-form @submit.prevent="saveBook">
@@ -59,8 +60,8 @@
       }
     },
     methods: {
+      // 登録・更新ボタン押下時に呼び出されるメソッド
       saveBook: function () {
-        this.$store.commit('message/clearMessage')
         api({
           method: this.isCreated ? 'put' : 'post',
           url: this.isCreated ? '/books/' + this.form.book.id + '/' : '/books/',
@@ -72,7 +73,7 @@
         })
           .then(response => {
             const message = this.isCreated ? '更新しました。' : '登録しました。'
-            this.$store.commit('message/setMessage', { info: message })
+            this.$store.commit('message/set', { info: message })
             this.form.book = response.data
           })
       }

@@ -11,22 +11,15 @@ const userModule = {
     loggedIn: false
   },
   mutations: {
-    setUser (state, payload) {
+    // set, clear など短いメソッド名で？
+    set (state, payload) {
       state.username = payload.user.username
       state.loggedIn = true
     },
-    removeUser (state) {
+    clear (state) {
       state.username = ''
       state.loggedIn = false
     }
-    // },
-    // actions: {
-    //   setUser ({ commit }, payload) {
-    //     commit('setUser', payload)
-    //   },
-    //   removeUser ({ commit }) {
-    //     commit('removeUser')
-    //   }
   }
 }
 
@@ -36,12 +29,10 @@ const messageModule = {
   state: {
     error: '',
     warnings: [],
-    info: '',
-    showSeconds: 10
+    info: ''
   },
   mutations: {
-    setMessage (state, payload) {
-      state.showSeconds = 10
+    set (state, payload) {
       if (payload.error) {
         state.error = payload.error
         state.warnings = []
@@ -56,7 +47,7 @@ const messageModule = {
         state.info = payload.info
       }
     },
-    clearMessage (state) {
+    clear (state) {
       state.error = ''
       state.warnings = []
       state.info = ''

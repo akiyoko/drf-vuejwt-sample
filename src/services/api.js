@@ -12,6 +12,8 @@ const api = axios.create({
 
 // 共通前処理
 api.interceptors.request.use(function (config) {
+  // メッセージエリアをクリア
+  store.commit('message/clear')
   const token = localStorage.getItem('access')
   if (token) {
     config.headers.Authorization = 'JWT ' + token
@@ -26,30 +28,37 @@ api.interceptors.request.use(function (config) {
 api.interceptors.response.use(function (response) {
   return response
 }, function (error) {
+  console.log('error=', error)
+  console.log('error.response=', error.response)
   const status = error.response ? error.response.status : 500
   console.log('status=', status)
-  console.log('error=', error)
 
+  let message
   if (status === 400) {
     // バリデーションNG
     const warnings = Object.entries(error.response.data)
-    store.commit('message/setMessage', { warnings: warnings })
+    store.commit('message/set', { warnings: warnings })
 
   } else if (status === 401) {
     // 認証エラー
-    const message = '認証エラーです。'
-    store.commit('message/setMessage', { error: message })
+    const token = localStorage.getItem('access')
+    if (token != null) {
+      message = 'ログイン有効期限切れ'
+      // localStorage.removeItem('access')
+    } else {
+      message = '認証エラー'
+    }
+    store.commit('message/set', { error: message })
 
   } else if (status === 403) {
     // 権限エラー
-    const message = '権限エラーです。'
-    store.commit('message/setMessage', { error: message })
+    message = '権限エラーです。'
+    store.commit('message/set', { error: message })
 
   } else {
     // その他のエラー
-    // this.messages.error = error.statusText
-    const message = error.statusText ? error.statusText : '想定外のエラーです。'
-    store.commit('message/setMessage', { error: message })
+    message = error.statusText ? error.statusText : '想定外のエラーです。'
+    store.commit('message/set', { error: message })
   }
   return Promise.reject(error)
 })

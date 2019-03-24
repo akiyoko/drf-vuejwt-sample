@@ -5,19 +5,17 @@ import store from '@/store'
  * ログイン
  * @param username
  * @param password
- * @returns {Promise}
  */
 function login (username, password) {
-  console.log('services/userService.js ... login() is called. username=', username)
   return api.post('/auth/jwt/create/', {
     'username': username,
     'password': password
   })
     .then(response => {
       console.log('888', response)
-      // localStorageにJWTトークンを保存
+      // localStorageにJWTを保存
       localStorage.setItem('access', response.data.access)
-      // ユーザー情報を取得してクライアント側の内部状態を更新
+      // ユーザー情報を取得してstoreのユーザー情報を更新
       return getUser()
         .then(user => user)
     })
@@ -27,25 +25,21 @@ function login (username, password) {
  * ログアウト
  */
 function logout () {
-  // localStorageからJWTトークンを削除
+  // localStorageからJWTを削除
   localStorage.removeItem('access')
-  // クライアント側の内部状態を更新
-  store.commit('user/removeUser')
+  // storeのユーザー情報をクリア
+  store.commit('user/clear')
 }
 
 /**
  * ユーザー情報を取得
- * @returns {Promise}
  */
 function getUser () {
-  console.log('11111')
   return api.get('/auth/users/me/')
     .then(response => {
-      console.log('22222')
       const user = response.data
-      console.log('3333')
-      // クライアント側の内部状態を更新
-      store.commit('user/setUser', { user: user })
+      // storeのユーザー情報を更新
+      store.commit('user/set', { user: user })
       return user
     })
 }

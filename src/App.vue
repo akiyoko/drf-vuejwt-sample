@@ -5,6 +5,20 @@
 </template>
 
 <script>
+  import userService from '@/services/userService'
+
+  export default {
+    mounted: function () {
+      const token = localStorage.getItem('access')
+      if (token != null) {
+        console.log('mounted ... JWT is found. So, try to get user info.')
+        userService.getUser()
+          .then(() => {
+            next()
+          })
+      }
+    }
+  }
 </script>
 
 <style>

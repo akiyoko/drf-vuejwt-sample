@@ -3,9 +3,10 @@
     <Header/>
     <Messages/>
 
+    <!-- メイン -->
     <main class="container">
       <p class="h5 mb-4">ログイン</p>
-      <b-form @submit.prevent="login">
+      <b-form @submit.prevent="submitLogin">
         <div class="row form-group">
           <label class="col-sm-3 col-form-label">ユーザー名</label>
           <div class="col-sm-8">
@@ -53,14 +54,13 @@
     },
     methods: {
       // ログインボタン押下時に呼び出されるメソッド
-      login: function () {
-        this.$store.commit('message/clearMessage')
+      submitLogin: function () {
         userService.login(this.form.username, this.form.password)
           .then(user => {
-            this.$store.commit('message/setMessage', { info: 'ログインしました。' })
+            this.$store.commit('message/set', { info: 'ログインしました。' })
             const next = this.$route.query.next || '/'
             this.$router.replace(next)
-            console.log('Login success!!')
+            console.log('Login succeeded.')
           })
       }
     }
