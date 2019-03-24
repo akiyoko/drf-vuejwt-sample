@@ -6,7 +6,7 @@
     <!-- メイン -->
     <main class="container">
       <p class="h5 mb-4">ホーム</p>
-      <b-form @submit.prevent="saveBook">
+      <b-form @submit.prevent="submitSave">
         <div class="row form-group">
           <label class="col-sm-3 col-form-label">タイトル</label>
           <div class="col-sm-8">
@@ -61,7 +61,7 @@
     },
     methods: {
       // 登録・更新ボタン押下時に呼び出されるメソッド
-      saveBook: function () {
+      submitSave: function () {
         api({
           method: this.isCreated ? 'put' : 'post',
           url: this.isCreated ? '/books/' + this.form.book.id + '/' : '/books/',

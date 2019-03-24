@@ -43,21 +43,21 @@ api.interceptors.response.use(function (response) {
     // 認証エラー
     const token = localStorage.getItem('access')
     if (token != null) {
-      message = 'ログイン有効期限切れ'
+      message = "ログイン有効期限切れ"
       // localStorage.removeItem('access')
     } else {
-      message = '認証エラー'
+      message = "認証エラー"
     }
     store.commit('message/set', { error: message })
 
   } else if (status === 403) {
     // 権限エラー
-    message = '権限エラーです。'
+    message = "権限エラーです。"
     store.commit('message/set', { error: message })
 
   } else {
     // その他のエラー
-    message = error.statusText ? error.statusText : '想定外のエラーです。'
+    message = error.statusText ? error.statusText : "想定外のエラーです。"
     store.commit('message/set', { error: message })
   }
   return Promise.reject(error)
